@@ -1,0 +1,5 @@
+include *.md *.txt *.json
+recursive-include geobricks_gis_vector *
+global-exclude *_dev.py
+global-exclude .gitignore
+global-exclude *_test
