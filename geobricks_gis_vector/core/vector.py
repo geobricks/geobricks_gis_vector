@@ -2,10 +2,13 @@ import uuid
 import os
 import subprocess
 import fiona
-from geobricks_common.core.log import logger
-from geobricks_common.core.filesystem import create_tmp_filename, get_filename
 import shutil
 import time
+from fiona.crs import to_string
+from geobricks_common.core.log import logger
+from geobricks_common.core.filesystem import create_tmp_filename, get_filename
+from geobricks_proj4_to_epsg.core.proj4_to_epsg import get_epsg_code_from_proj4
+
 
 log = logger(__file__)
 
@@ -48,8 +51,8 @@ def crop_vector_with_bounding_box(input_file_bbox, file_to_crop, output_path=Non
             if output_path is None:
                 output_path = create_tmp_filename('shp', 'tmp_shp_bbox', 'tmp_shp_bbox_' + str(uuid.uuid4()), False)
                 bounds = c.bounds
-                s_srs = c.crs['init']
-                t_srs = d.crs['init']
+                # s_srs = c.crs['init']
+                # t_srs = d.crs['init']
                 # check bounds
                 if bounds[0] == 0.0 and bounds[1] == 0.0 and bounds[2] == 0.0 and bounds[3] == 0.0:
                     msg = "Shapefile " + input_file_bbox + " has 0 invalide size"
@@ -163,12 +166,15 @@ def get_authority(file_path):
     :param file_path: path to the file
     :return: return the SRID of the raster projection
     '''
-    with fiona.open(file_path) as src:
-        log.info(src)
-        if 'init' in src.crs:
-            return src.crs['init']
-        elif 'proj' in src.crs:
-            return src.crs['proj']
+    with fiona.open(file_path) as c:
+        log.info(c)
+        # print c.crs
+        # print to_string(c.crs)
+        # print get_epsg_code_from_proj4(c.crs)
+        if 'init' in c.crs:
+            return c.crs['init']
+        elif 'proj' in c.crs:
+            return "EPSG:" + str(get_epsg_code_from_proj4(to_string(c.crs)))
     return None
 
 
@@ -179,6 +185,8 @@ def get_srid(file_path):
     :return: return the SRID of the raster projection
     '''
     proj = get_authority(file_path)
+    print proj
+    log.info(proj)
     if ":" in proj:
         return proj.split(":")[1]
     if proj.isdigit():
@@ -190,3 +198,10 @@ def get_srid(file_path):
 # # path = crop_vector_on_vector_bbox_and_postgis(input_path, '"PG:host=localhost dbname=fenix user=fenix password=Qwaszx"', "select * from spatial.gaul0_2015_4326 where adm0_name IN ('Brazil')")
 # path = crop_vector_on_vector_bbox_and_postgis(input_path, '"PG:host=localhost dbname=fenix user=fenix password=Qwaszx"', "select * from spatial.gaul0_faostat_4326 where areanamee IN ('Malta')")
 # print "Output Path: ", path
+
+# input_path = '/home/vortex/Desktop/LAYERS/ghg/ALL_VECTOR/3857/BA/GFED4_BurnedArea_ClosedShrubland_1997_3857.shp'
+#
+# print get_authority(input_path)
+# print get_srid(input_path)
+
+

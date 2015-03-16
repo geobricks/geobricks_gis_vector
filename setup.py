@@ -11,12 +11,13 @@ setup(
     long_description=open('README.md').read(),
     description='Geobricks library to process vector layers.',
     install_requires=[
+        'watchdog',
         'flask',
         'flask-cors',
         # TODO: is it really needed? (right now it just check for bbox)
         'fiona',
-        'GeobricksCommon'
-
+        'GeobricksCommon',
+        'GeobricksProj4ToEPSG'
     ],
     url='http://pypi.python.org/pypi/GeobricksGISVector/',
     keywords=['geobricks', 'geoserver', 'gis', 'vector']
