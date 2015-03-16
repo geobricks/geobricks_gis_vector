@@ -185,23 +185,12 @@ def get_srid(file_path):
     :return: return the SRID of the raster projection
     '''
     proj = get_authority(file_path)
-    print proj
+    # print proj
     log.info(proj)
     if ":" in proj:
         return proj.split(":")[1]
     if proj.isdigit():
         return proj
     return None
-
-# # input_path = '/home/vortex/Desktop/export/G2014_2013_1_mid.shp'
-# input_path = '/home/vortex/Desktop/LAYERS/GHG_13_NOVEMEBRE/GEZ2010/gez_2010_wgs84.shp'
-# # path = crop_vector_on_vector_bbox_and_postgis(input_path, '"PG:host=localhost dbname=fenix user=fenix password=Qwaszx"', "select * from spatial.gaul0_2015_4326 where adm0_name IN ('Brazil')")
-# path = crop_vector_on_vector_bbox_and_postgis(input_path, '"PG:host=localhost dbname=fenix user=fenix password=Qwaszx"', "select * from spatial.gaul0_faostat_4326 where areanamee IN ('Malta')")
-# print "Output Path: ", path
-
-# input_path = '/home/vortex/Desktop/LAYERS/ghg/ALL_VECTOR/3857/BA/GFED4_BurnedArea_ClosedShrubland_1997_3857.shp'
-#
-# print get_authority(input_path)
-# print get_srid(input_path)
 
 
