@@ -2,7 +2,7 @@ import unittest
 import os
 import shutil
 from geobricks_common.core.log import logger
-from geobricks_gis_vector.core.vector import crop_by_vector_by_vector
+from geobricks_gis_vector.core.vector import crop_shp_by_shp
 
 log = logger(__file__)
 
@@ -13,7 +13,8 @@ class GeobricksTest(unittest.TestCase):
         input_path = '../../test_data/storage/vector/gaul1_italy_malta_4326/gaul1_italy_malta_4326.shp'
         crop_shp_path = os.path.normpath(os.path.join(os.path.dirname(__file__), crop_shp_path))
         input_path = os.path.normpath(os.path.join(os.path.dirname(__file__), input_path))
-        output_path = crop_by_vector_by_vector(crop_shp_path, input_path)
+        output_path = crop_shp_by_shp(crop_shp_path, input_path)
+        #print output_path
         self.assertEqual(os.path.isfile(output_path), True)
         # removing produced output
         shutil.rmtree(os.path.dirname(output_path))
