@@ -44,6 +44,28 @@ def crop_vector_on_vector_bbox_and_postgis(input_path, db_connection_string, que
     return clipped_path
 
 
+def crop_shp_by_shp(input_path, crop_shp_path, output_name=None):
+    start = time.time()
+    # i.e. afg.shp
+    log.info("crop_shp_path: " + crop_shp_path)
+
+    # crop input_path to the bbox of the exported postgis layer
+    cropped_by_bbox_path = crop_vector_with_bounding_box(crop_shp_path, input_path)
+    log.info("cropped_by_bbox_path: " + cropped_by_bbox_path)
+
+    # crop the produced cropped_by_bbox shp with the crop_shp_path (i.e. GAUL0 'Italy')
+    clipped_path = crop_by_vector_by_vector(crop_shp_path, cropped_by_bbox_path, output_name)
+    log.info("Final output clipped_path: " + str(clipped_path))
+
+    # remove temporary folders
+    # shutil.rmtree(os.path.dirname(crop_shp_path))
+    # shutil.rmtree(os.path.dirname(cropped_by_bbox_path))
+
+    end = time.time()
+    log.info("Time to process:" + str(end - start))
+    return clipped_path
+
+
 def crop_vector_with_bounding_box(input_file_bbox, file_to_crop, output_path=None):
     # ogr2ogr -f "ESRI Shapefile" output.shp input.shp -clipsrc <x_min> <y_min> <x_max> <y_max>
     with fiona.open(input_file_bbox) as c:
@@ -62,6 +84,8 @@ def crop_vector_with_bounding_box(input_file_bbox, file_to_crop, output_path=Non
 
                 args = [
                     'ogr2ogr',
+                    # TODO: optional overwrite
+                    '-overwrite',
                     '-f',
                     '"ESRI Shapefile"',
                     output_path,
@@ -101,6 +125,8 @@ def create_shp_from_postgis(db_connection_string, query, output_path=None):
         log.warn("TODO: get the folder by output_path filename. check if the folder is created, otherwise create it.")
     args = [
         'ogr2ogr',
+        # TODO: optional overwrite
+        '-overwrite',
         '-f',
         '"ESRI Shapefile"',
         output_path,
@@ -133,6 +159,8 @@ def crop_by_vector_by_vector(crop_shp_path, input_path, output_name=None):
     args = [
         'ogr2ogr',
         '-skipfailures',
+        # TODO: optional overwrite
+        '-overwrite',
         '-clipsrc',
         crop_shp_path,
         output_path,
