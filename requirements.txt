@@ -1,0 +1,7 @@
+watchdog
+flask
+flask-cors
+fiona
+requests #TODO: fix it geobricks_common requirement
+https://github.com/geobricks/geobricks_common/archive/development.zip
+https://github.com/geobricks/geobricks_proj4_to_epsg/archive/development.zip
