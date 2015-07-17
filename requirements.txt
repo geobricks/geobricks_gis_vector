@@ -1,0 +1,6 @@
+watchdog
+flask
+flask-cors
+fiona
+https://github.com/geobricks/geobricks_common/archive/development.zip
+https://github.com/geobricks/geobricks_proj4_to_epsg/archive/development.zip
